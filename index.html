@@ -1,56 +1,154 @@
-<?php include("config.php"); ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Katalog Perpustakaan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Perpustakaan - Aesthetic Orange</title>
     <style>
-        /* (CSS tetap sama seperti sebelumnya) */
+        /* Pengaturan Dasar & Background */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            /* Background gradasi krem ke kuning muda agar aesthetic */
+            background: linear-gradient(135deg, #fff9e6 0%, #ffecb3 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #444;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 165, 0, 0.2); /* Shadow warna oranye tipis */
+        }
+
+        /* Bagian Header & Tagline */
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-section h1 {
+            /* Warna Oranye Terang */
+            color: #fb8c00;
+            margin-bottom: 5px;
+            font-size: 32px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .header-section p {
+            color: #f57c00;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        /* Kotak Pencarian */
+        .search-box {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #searchInput {
+            width: 80%;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: 2px solid #ffe082;
+            border-radius: 30px;
+            outline: none;
+            transition: 0.3s;
+            background-color: #fffdec;
+        }
+
+        #searchInput:focus {
+            border-color: #fb8c00;
+            box-shadow: 0 0 10px rgba(251, 140, 0, 0.2);
+        }
+
+        /* Tabel Katalog */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #ffe082;
+        }
+
+        thead {
+            /* Gradasi Oranye ke Kuning Tua */
+            background: linear-gradient(to right, #fb8c00, #ffb300);
+            color: white;
+        }
+
+        th, td {
+            padding: 18px;
+            text-align: left;
+        }
+
+        th {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        tbody tr {
+            transition: 0.3s;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fffbe6; /* Warna kuning sangat muda untuk baris genap */
+        }
+
+        tbody tr:hover {
+            background-color: #fff3e0; /* Hover warna oranye susu */
+            transform: scale(1.01);
+        }
+
+        /* Styling Link Gambar */
+        .link-buku {
+            color: #e65100; /* Oranye gelap agar kontras dan mudah dibaca */
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: 0.3s;
+        }
+
+        .link-buku:hover {
+            border-bottom: 2px solid #e65100;
+            color: #ff6d00;
+        }
+
+        /* Badge Kategori */
+        .category-badge {
+            background: #ffe0b2;
+            color: #ef6c00;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+
 <div class="container">
     <div class="header-section">
         <h1>Selamat Datang di Ruang Baca Digital</h1>
         <p>"Membaca adalah petualangan yang dimulai dari hati."</p>
     </div>
 
-    <!-- Form Tambah Koleksi -->
-    <div class="form-add">
-        <h3>Tambahkan Koleksi Baru</h3>
-        <form method="POST" action="">
-            <input type="text" name="judul" placeholder="Judul Buku" required>
-            <input type="text" name="penulis" placeholder="Penulis" required>
-            <input type="text" name="tahun" placeholder="Tahun" required>
-            <input type="text" name="kategori" placeholder="Kategori" required>
-            <input type="text" name="link" placeholder="Link Buku (Google Drive)" required>
-            <input type="text" name="gambar" placeholder="URL Sampul Buku" required>
-            <button type="submit" name="tambah">Tambah</button>
-        </form>
+    <div class="search-box">
+        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari koleksi buku favoritmu...">
     </div>
 
-    <?php
-    // Simpan data ke database
-    if(isset($_POST['tambah'])){
-        $judul = $_POST['judul'];
-        $penulis = $_POST['penulis'];
-        $tahun = $_POST['tahun'];
-        $kategori = $_POST['kategori'];
-        $link = $_POST['link'];
-        $gambar = $_POST['gambar'];
-
-        $sql = "INSERT INTO buku (judul, penulis, tahun, kategori, link, gambar) 
-                VALUES ('$judul','$penulis','$tahun','$kategori','$link','$gambar')";
-        mysqli_query($conn, $sql);
-    }
-    ?>
-
-    <!-- Tabel Katalog -->
     <table id="bookTable">
         <thead>
             <tr>
                 <th>No</th>
-                <th>Sampul</th>
                 <th>Judul Buku</th>
                 <th>Penulis</th>
                 <th>Tahun</th>
@@ -58,22 +156,53 @@
             </tr>
         </thead>
         <tbody>
-            <?php
-            $result = mysqli_query($conn, "SELECT * FROM buku");
-            $no = 1;
-            while($row = mysqli_fetch_assoc($result)){
-                echo "<tr>
-                        <td>".$no++."</td>
-                        <td><img src='".$row['gambar']."' class='book-img'></td>
-                        <td><a href='".$row['link']."' target='_blank'>".$row['judul']."</a></td>
-                        <td>".$row['penulis']."</td>
-                        <td>".$row['tahun']."</td>
-                        <td><span class='category-badge'>".$row['kategori']."</span></td>
-                      </tr>";
-            }
-            ?>
+            <tr>
+                <td>1</td>
+                <td><a href="jafar.jpg" target="_blank" class="link-buku">Tuhan Ada di Hatimu</a></td>
+                <td>Habib Ja'far</td>
+                <td>2020</td>
+                <td><span class="category-badge">Agama</span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><a href="hujan.jpg" target="_blank" class="link-buku">Hujan</a></td>
+                <td>Tere Liye</td>
+                <td>2016</td>
+                <td><span class="category-badge">Novel</span></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><a href="pulang.jpg" target="_blank" class="link-buku">Pulang</a></td>
+                <td>Tere Liye</td>
+                <td>2015</td>
+                <td><span class="category-badge">Novel</span></td>
+            </tr>
         </tbody>
     </table>
 </div>
+
+<script>
+function filterTable() {
+    let input = document.getElementById("searchInput");
+    let filter = input.value.toLowerCase();
+    let table = document.getElementById("bookTable");
+    let tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        let tdTitle = tr[i].getElementsByTagName("td")[1];
+        let tdAuthor = tr[i].getElementsByTagName("td")[2];
+        if (tdTitle || tdAuthor) {
+            let textValue = (tdTitle.textContent || tdTitle.innerText) + 
+                            (tdAuthor.textContent || tdAuthor.innerText);
+            if (textValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+</script>
+
 </body>
 </html>
