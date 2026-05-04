@@ -76,6 +76,7 @@
             border-radius: 15px;
             overflow: hidden;
             border: 1px solid #ffe082;
+            margin-bottom: 30px;
         }
 
         thead {
@@ -131,6 +132,135 @@
             font-size: 12px;
             font-weight: bold;
         }
+
+        /* === STYLING UNTUK FORM PENAMBAHAN KOLEKSI === */
+        .add-collection-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #ffb300;
+            margin-top: 30px;
+        }
+
+        .add-collection-section h2 {
+            color: #fb8c00;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #e65100;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 15px;
+            font-size: 14px;
+            border: 2px solid #ffb300;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+            background-color: #fffef5;
+            color: #444;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #fb8c00;
+            box-shadow: 0 0 8px rgba(251, 140, 0, 0.3);
+            background-color: #fffdec;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 15px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-add {
+            background: linear-gradient(to right, #fb8c00, #ffb300);
+            color: white;
+            box-shadow: 0 5px 15px rgba(251, 140, 0, 0.3);
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(251, 140, 0, 0.4);
+        }
+
+        .btn-reset {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-reset:hover {
+            background: #d0d0d0;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Pesan Notifikasi */
+        .notification {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .notification.success {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+            display: block;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .notification.error {
+            background-color: #ffcdd2;
+            color: #c62828;
+            display: block;
+            border-left: 4px solid #c62828;
+        }
     </style>
 </head>
 <body>
@@ -179,6 +309,59 @@
             </tr>
         </tbody>
     </table>
+
+    <!-- === BAGIAN PENAMBAHAN KOLEKSI BUKU === -->
+    <div class="add-collection-section">
+        <h2>➕ Tambah Koleksi Buku Baru</h2>
+        
+        <div id="notificationMessage" class="notification"></div>
+
+        <form id="addBookForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="bookTitle">Judul Buku *</label>
+                    <input type="text" id="bookTitle" placeholder="Masukkan judul buku" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookAuthor">Penulis *</label>
+                    <input type="text" id="bookAuthor" placeholder="Masukkan nama penulis" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="bookYear">Tahun Terbit *</label>
+                    <input type="number" id="bookYear" min="1900" max="2100" placeholder="Contoh: 2024" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookCategory">Kategori *</label>
+                    <select id="bookCategory" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="Agama">Agama</option>
+                        <option value="Novel">Novel</option>
+                        <option value="Fiksi">Fiksi</option>
+                        <option value="Non-Fiksi">Non-Fiksi</option>
+                        <option value="Biografi">Biografi</option>
+                        <option value="Teknologi">Teknologi</option>
+                        <option value="Pendidikan">Pendidikan</option>
+                        <option value="Seni">Seni</option>
+                        <option value="Sejarah">Sejarah</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bookLink">Link Gambar / File (Opsional)</label>
+                <input type="text" id="bookLink" placeholder="Contoh: nama-buku.jpg">
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-add">Tambah ke Koleksi</button>
+                <button type="reset" class="btn btn-reset">Reset Form</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -202,7 +385,73 @@ function filterTable() {
         }
     }
 }
+
+// === FUNGSI UNTUK MENAMBAH BUKU BARU ===
+document.getElementById("addBookForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    // Ambil data dari form
+    let judul = document.getElementById("bookTitle").value.trim();
+    let penulis = document.getElementById("bookAuthor").value.trim();
+    let tahun = document.getElementById("bookYear").value.trim();
+    let kategori = document.getElementById("bookCategory").value.trim();
+    let link = document.getElementById("bookLink").value.trim();
+
+    // Validasi input
+    if (!judul || !penulis || !tahun || !kategori) {
+        tampilNotifikasi("Harap isi semua field yang wajib (*)", "error");
+        return;
+    }
+
+    // Ambil nomor baris berikutnya
+    let table = document.getElementById("bookTable");
+    let rowCount = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+    let nomorBaru = rowCount + 1;
+
+    // Buat baris tabel baru
+    let newRow = table.getElementsByTagName("tbody")[0].insertRow();
+    
+    // Masukkan data ke dalam baris
+    let cell1 = newRow.insertCell(0);
+    let cell2 = newRow.insertCell(1);
+    let cell3 = newRow.insertCell(2);
+    let cell4 = newRow.insertCell(3);
+    let cell5 = newRow.insertCell(4);
+
+    cell1.textContent = nomorBaru;
+    
+    // Jika ada link, jadikan hyperlink, jika tidak langsung text
+    if (link) {
+        cell2.innerHTML = '<a href="' + link + '" target="_blank" class="link-buku">' + judul + '</a>';
+    } else {
+        cell2.textContent = judul;
+    }
+    
+    cell3.textContent = penulis;
+    cell4.textContent = tahun;
+    cell5.innerHTML = '<span class="category-badge">' + kategori + '</span>';
+
+    // Tampilkan pesan sukses
+    tampilNotifikasi("✓ Buku '" + judul + "' berhasil ditambahkan ke koleksi!", "success");
+
+    // Reset form
+    document.getElementById("addBookForm").reset();
+
+    // Clear notifikasi setelah 3 detik
+    setTimeout(() => {
+        document.getElementById("notificationMessage").style.display = "none";
+    }, 3000);
+});
+
+// Fungsi untuk menampilkan notifikasi
+function tampilNotifikasi(pesan, tipe) {
+    let notif = document.getElementById("notificationMessage");
+    notif.textContent = pesan;
+    notif.className = "notification " + tipe;
+    notif.style.display = "block";
+}
 </script>
 
 </body>
 </html>
+
