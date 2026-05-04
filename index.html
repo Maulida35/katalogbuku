@@ -1,0 +1,79 @@
+<?php include("config.php"); ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Katalog Perpustakaan</title>
+    <style>
+        /* (CSS tetap sama seperti sebelumnya) */
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-section">
+        <h1>Selamat Datang di Ruang Baca Digital</h1>
+        <p>"Membaca adalah petualangan yang dimulai dari hati."</p>
+    </div>
+
+    <!-- Form Tambah Koleksi -->
+    <div class="form-add">
+        <h3>Tambahkan Koleksi Baru</h3>
+        <form method="POST" action="">
+            <input type="text" name="judul" placeholder="Judul Buku" required>
+            <input type="text" name="penulis" placeholder="Penulis" required>
+            <input type="text" name="tahun" placeholder="Tahun" required>
+            <input type="text" name="kategori" placeholder="Kategori" required>
+            <input type="text" name="link" placeholder="Link Buku (Google Drive)" required>
+            <input type="text" name="gambar" placeholder="URL Sampul Buku" required>
+            <button type="submit" name="tambah">Tambah</button>
+        </form>
+    </div>
+
+    <?php
+    // Simpan data ke database
+    if(isset($_POST['tambah'])){
+        $judul = $_POST['judul'];
+        $penulis = $_POST['penulis'];
+        $tahun = $_POST['tahun'];
+        $kategori = $_POST['kategori'];
+        $link = $_POST['link'];
+        $gambar = $_POST['gambar'];
+
+        $sql = "INSERT INTO buku (judul, penulis, tahun, kategori, link, gambar) 
+                VALUES ('$judul','$penulis','$tahun','$kategori','$link','$gambar')";
+        mysqli_query($conn, $sql);
+    }
+    ?>
+
+    <!-- Tabel Katalog -->
+    <table id="bookTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Sampul</th>
+                <th>Judul Buku</th>
+                <th>Penulis</th>
+                <th>Tahun</th>
+                <th>Kategori</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $result = mysqli_query($conn, "SELECT * FROM buku");
+            $no = 1;
+            while($row = mysqli_fetch_assoc($result)){
+                echo "<tr>
+                        <td>".$no++."</td>
+                        <td><img src='".$row['gambar']."' class='book-img'></td>
+                        <td><a href='".$row['link']."' target='_blank'>".$row['judul']."</a></td>
+                        <td>".$row['penulis']."</td>
+                        <td>".$row['tahun']."</td>
+                        <td><span class='category-badge'>".$row['kategori']."</span></td>
+                      </tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
